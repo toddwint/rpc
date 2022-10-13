@@ -1,27 +1,25 @@
-FROM ubuntu:focal
+FROM toddwint/mybaseimage
 COPY scripts /opt/rpc/scripts
-EXPOSE 9001
+EXPOSE 8080 8081 8082 111/tcp 111/udp
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=UTC \
-    HTTPPORT=9001 \
-    HOSTNAME=rpcsrvr
+    HTTPPORT1=8080 \
+    HTTPPORT2=8081 \
+    HTTPPORT3=8082 \
+    HOSTNAME=rpcsrvr \
+    APPNAME=rpc
 RUN apt-get update \
     && \
     apt-get install -y \
-    tzdata \
-    iproute2 \
-    wget \
-    libtirpc-dev \
+    libtirpc3 \
+    netbase \
     rpcbind \
     && \
     echo $HOSTNAME > /etc/hostname \
     && \
-    wget -q https://github.com/mthenw/frontail/releases/download/v4.9.1/frontail-linux -O /usr/local/bin/frontail \
+    cd /opt \
     && \
-    chmod 755 /usr/local/bin/frontail \
-    && \
-    apt-get remove -y \
-    wget \
+    rm -rf /opt/mybaseimage \
     && \
     apt-get autoremove -y \
     && \
