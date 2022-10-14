@@ -1,11 +1,11 @@
 FROM toddwint/mybaseimage
 COPY scripts /opt/rpc/scripts
-EXPOSE 8080 8081 8082 111/tcp 111/udp
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=UTC \
     HTTPPORT1=8080 \
     HTTPPORT2=8081 \
     HTTPPORT3=8082 \
+    HTTPPORT4=8083 \
     HOSTNAME=rpcsrvr \
     APPNAME=rpc
 RUN apt-get update \

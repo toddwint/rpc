@@ -42,6 +42,7 @@ IPADDR=127.0.0.1
 HTTPPORT1=8080
 HTTPPORT2=8081
 HTTPPORT3=8082
+HTTPPORT4=8083
 HOSTNAME=rpcsrvr01
 ```
 
@@ -57,7 +58,6 @@ source "$(dirname "$(realpath $0)")"/config.txt
 # Create the docker container
 docker run -dit \
     --name "$HOSTNAME" \
-    --network host \
     -h "$HOSTNAME" \
     -v "$HOSTNAME":/opt/"$APPNAME"/logs \
     -p "$IPADDR":111:111/tcp \
@@ -65,10 +65,12 @@ docker run -dit \
     -p "$IPADDR":"$HTTPPORT1":"$HTTPPORT1" \
     -p "$IPADDR":"$HTTPPORT2":"$HTTPPORT2" \
     -p "$IPADDR":"$HTTPPORT3":"$HTTPPORT3" \
+    -p "$IPADDR":"$HTTPPORT4":"$HTTPPORT4" \
     -e TZ="$TZ" \
     -e HTTPPORT1="$HTTPPORT1" \
     -e HTTPPORT2="$HTTPPORT2" \
     -e HTTPPORT3="$HTTPPORT3" \
+    -e HTTPPORT4="$HTTPPORT4" \
     -e HOSTNAME="$HOSTNAME" \
     -e APPNAME="$APPNAME" \
     ${REPO}/${APPNAME}
@@ -83,6 +85,7 @@ Open the `webadmin.html` file.
   - `http://<ip_address>:<port1>` or
   - `http://<ip_address>:<port2>` or
   - `http://<ip_address>:<port3>`
+  - `http://<ip_address>:<port4>`
 
 
 ## Issues?

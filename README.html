@@ -196,6 +196,7 @@ IPADDR=127.0.0.1
 HTTPPORT1=8080
 HTTPPORT2=8081
 HTTPPORT3=8082
+HTTPPORT4=8083
 HOSTNAME=rpcsrvr01</code></pre>
 <h2 id="sample-docker-run-script">Sample docker run script</h2>
 <pre><code>#!/usr/bin/env bash
@@ -206,7 +207,6 @@ source &quot;$(dirname &quot;$(realpath $0)&quot;)&quot;/config.txt
 # Create the docker container
 docker run -dit \
     --name &quot;$HOSTNAME&quot; \
-    --network host \
     -h &quot;$HOSTNAME&quot; \
     -v &quot;$HOSTNAME&quot;:/opt/&quot;$APPNAME&quot;/logs \
     -p &quot;$IPADDR&quot;:111:111/tcp \
@@ -214,10 +214,12 @@ docker run -dit \
     -p &quot;$IPADDR&quot;:&quot;$HTTPPORT1&quot;:&quot;$HTTPPORT1&quot; \
     -p &quot;$IPADDR&quot;:&quot;$HTTPPORT2&quot;:&quot;$HTTPPORT2&quot; \
     -p &quot;$IPADDR&quot;:&quot;$HTTPPORT3&quot;:&quot;$HTTPPORT3&quot; \
+    -p &quot;$IPADDR&quot;:&quot;$HTTPPORT4&quot;:&quot;$HTTPPORT4&quot; \
     -e TZ=&quot;$TZ&quot; \
     -e HTTPPORT1=&quot;$HTTPPORT1&quot; \
     -e HTTPPORT2=&quot;$HTTPPORT2&quot; \
     -e HTTPPORT3=&quot;$HTTPPORT3&quot; \
+    -e HTTPPORT4=&quot;$HTTPPORT4&quot; \
     -e HOSTNAME=&quot;$HOSTNAME&quot; \
     -e APPNAME=&quot;$APPNAME&quot; \
     ${REPO}/${APPNAME}</code></pre>
@@ -229,6 +231,7 @@ docker run -dit \
 <li><code>http://&lt;ip_address&gt;:&lt;port1&gt;</code> or</li>
 <li><code>http://&lt;ip_address&gt;:&lt;port2&gt;</code> or</li>
 <li><code>http://&lt;ip_address&gt;:&lt;port3&gt;</code></li>
+<li><code>http://&lt;ip_address&gt;:&lt;port4&gt;</code></li>
 </ul></li>
 </ul>
 <h2 id="issues">Issues?</h2>
