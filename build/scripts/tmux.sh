@@ -14,6 +14,7 @@ echo '
   Ctrl + b then Esc         | Exit copy/scroll mode
   Ctrl + b then q then 0-9  | Focus on pane number
   Ctrl + b then x           | Close current pane
+  Ctrl + b then d           | Detach from tmux session
   Ctrl + b then c           | Create a new window
   Ctrl + b then n           | Move to the next window
   Ctrl + b then p           | Move to the previous window
