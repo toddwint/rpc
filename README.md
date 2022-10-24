@@ -37,13 +37,20 @@ GitHub: <https://github.com/toddwint/rpc>
 ## Sample `config.txt` file
 
 ```
+# To get a list of timezones view the files in `/usr/share/zoneinfo`
 TZ=UTC
-IPADDR=127.0.0.1
-HTTPPORT1=8080
-HTTPPORT2=8081
-HTTPPORT3=8082
-HTTPPORT4=8083
-HOSTNAME=rpcsrvr01
+
+# The interface on which to set the IP. Run `ip -br a` to see a list
+INTERFACE=eth0
+
+# The IP address that will be set on the host and NAT'd to the container
+IPADDR=192.168.10.1
+
+# The IP subnet in the form subnet/cidr
+SUBNET=192.168.10.0/24
+
+# The hostname of the instance of the docker container
+HOSTNAME=rpc01
 ```
 
 
@@ -55,38 +62,23 @@ REPO=toddwint
 APPNAME=rpc
 source "$(dirname "$(realpath $0)")"/config.txt
 
+# Set the IP on the interface
+IPASSIGNED=$(ip addr show $INTERFACE | grep $IPADDR)
+if [ -z "$IPASSIGNED" ]; then
+   SETIP="$IPADDR/$(echo $SUBNET | awk -F/ '{print $2}')" 
+   sudo ip addr add $SETIP dev $INTERFACE
+else
+    echo 'IP is already assigned to the interface'
+fi
+
 # Create the docker container
 docker run -dit \
     --name "$HOSTNAME" \
     -h "$HOSTNAME" \
     -p "$IPADDR":111:111/tcp \
     -p "$IPADDR":111:111/udp \
-    -p "$IPADDR":"$HTTPPORT1":"$HTTPPORT1" \
-    -p "$IPADDR":"$HTTPPORT2":"$HTTPPORT2" \
-    -p "$IPADDR":"$HTTPPORT3":"$HTTPPORT3" \
-    -p "$IPADDR":"$HTTPPORT4":"$HTTPPORT4" \
     -e TZ="$TZ" \
-    -e HTTPPORT1="$HTTPPORT1" \
-    -e HTTPPORT2="$HTTPPORT2" \
-    -e HTTPPORT3="$HTTPPORT3" \
-    -e HTTPPORT4="$HTTPPORT4" \
     -e HOSTNAME="$HOSTNAME" \
     -e APPNAME="$APPNAME" \
     ${REPO}/${APPNAME}
 ```
-
-
-## Login page
-
-Open the `webadmin.html` file.
-
-- Or just type in your browser: 
-  - `http://<ip_address>:<port1>` or
-  - `http://<ip_address>:<port2>` or
-  - `http://<ip_address>:<port3>`
-  - `http://<ip_address>:<port4>`
-
-
-## Issues?
-
-Make sure to set the IP on the host and that the ports being used are not currently being used by the host.
