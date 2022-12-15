@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 REPO=toddwint
 APPNAME=rpc
-source "$(dirname "$(realpath $0)")"/config.txt
+SCRIPTDIR="$(dirname "$(realpath "$0")")"
+source "$SCRIPTDIR"/config.txt
 
 # Set the IP on the interface
 IPASSIGNED=$(ip addr show $INTERFACE | grep $IPADDR)
@@ -11,6 +12,10 @@ if [ -z "$IPASSIGNED" ]; then
 else
     echo 'IP is already assigned to the interface'
 fi
+
+# Add remote network routes
+IFS=',' # Internal Field Separator
+for ROUTE in $ROUTES; do sudo ip route add "$ROUTE" via "$GATEWAY"; done
 
 # Create the docker container
 docker run -dit \
