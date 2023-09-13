@@ -2,7 +2,7 @@
 SCRIPTDIR="$(dirname "$(realpath "$0")")"
 
 # Check that files exist first
-FILES=("config.txt")
+FILES=("config.txt" "templates/compose.yaml.template")
 for FILE in "${FILES[@]}"; do
     if [ ! -f "${SCRIPTDIR}/${FILE}" ]; then
             echo "File not found: ${FILE}"
@@ -14,8 +14,10 @@ done
 # Then start by importing environment file
 source "${SCRIPTDIR}"/config.txt
 
-# Copy config.txt to .env
-echo "Creating container: ${HOSTNAME}"
+# Copy the docker compose files. Copy config.txt to .env
+echo "Creating project: ${HOSTNAME}"
+cp "${SCRIPTDIR}/templates/compose.yaml.template" "${SCRIPTDIR}/compose.yaml"
+echo "Added file: compose.yaml"
 cp "${SCRIPTDIR}/config.txt" "${SCRIPTDIR}/.env"
 echo "Copied config.txt to .env"
 
@@ -32,17 +34,6 @@ sudo ip addr add "${MGMTIP}/32" dev "${INTERFACE}-macvlan"
 sudo ip route add "${SUBNET}" dev "${INTERFACE}-macvlan"
 echo "Added routes from management network to docker network"
 
-# Create the docker container
+# Start the project (containers plus network interface)
 echo '- - - - -'
-echo "Starting container: ${HOSTNAME}"
-docker run -dit \
-    --name "${HOSTNAME}" \
-    --network "${INTERFACE}-macvlan" \
-    --ip "${IPADDR}" \
-    -h "${HOSTNAME}" \
-    -p "${IPADDR}:111:111/tcp" \
-    -p "${IPADDR}:111:111/udp" \
-    -e TZ="${TZ}" \
-    -e HOSTNAME="${HOSTNAME}" \
-    -e APPNAME="${APPNAME}" \
-    "toddwint/${APPNAME}"
+docker compose up -d

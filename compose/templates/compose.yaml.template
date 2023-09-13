@@ -1,0 +1,22 @@
+name: ${HOSTNAME}
+
+services:
+  rpc:
+    image: toddwint/rpc
+    hostname: ${HOSTNAME}
+    ports:
+        - "${IPADDR}:111:111/tcp"
+        - "${IPADDR}:111:111/udp"
+    networks:
+        default:
+            ipv4_address: ${IPADDR}
+    environment:
+        - HOSTNAME=${HOSTNAME}
+        - TZ=${TZ}
+        - APPNAME=${APPNAME}
+    tty: true
+
+networks:
+    default:
+        name: "${INTERFACE}-macvlan"
+        external: true
