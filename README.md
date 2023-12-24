@@ -1,6 +1,6 @@
 ---
 title: README
-date: 2023-11-03
+date: 2023-12-21
 ---
 
 # toddwint/rpc
@@ -30,12 +30,13 @@ Example `docker run` and `docker compose` commands as well as sample commands to
 
 - Ubuntu base image
 - Plus:
-  - rpcbind
+  - fzf
+  - iproute2
   - libtirpc3
   - netbase
-  - tmux
   - python3-minimal
-  - iproute2
+  - rpcbind
+  - tmux
   - tzdata
   - [ttyd](https://github.com/tsl0922/ttyd)
     - View the terminal in your browser
